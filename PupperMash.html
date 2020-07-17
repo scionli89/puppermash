@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PUPPERMASH</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial; /*Or Arial*/
+}
+
+/* Style the header */
+header {
+  background-color: #940F0F;
+  padding: 5px;
+  text-align: center;
+  font-size: 25px;
+  color: white;
+  <!--height: 100px;-->
+}
+
+/* Style the footer */
+footer {
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  color: Black;
+}
+
+
+table {
+  border-collapse: collapse;
+}
+
+table, td, th {
+  border: 0px solid black;
+}
+
+th {
+    background-color: black;
+    color: white;
+} 
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.centerbutton {
+  width: 150px;
+  text-align: center;
+  margin:0 auto;
+  align-items: center;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h2><strong>PUPPERMASH</strong></h2>
+</header>
+<h3 style="text-align:center">Do we deserve cute puppies? No. Will we be judged by judging them? Yes.</h3>
+<h1 style="text-align:center">Who is Cuter? Click to Choose.</h1>
+
+<table class="center" style="width:50%">
+
+  <tr>
+    <th width=45%>Pupper 1</th>
+    <th width=10%></th>
+	<th width=45%>Pupper 2</th>
+  </tr>
+
+  <tr>
+    <td style="text-align:center;padding:20px"><strong><div id="pup1" onclick="Pup1Win()"><img src="pups/puppy1.jpg" height="200" id="newpup1"></td>
+    <td style="text-align:center" >OR</td>
+    <td style="text-align:center;padding:20px"><strong><div id="pup2" onclick="Pup1Win2()"><img src="pups/puppy2.jpg" height="200" id="newpup2"></td>
+  </tr>
+</table>
+<br>
+<h3 style="text-align:center">Previous Pups</h3>
+
+<table class="center" style="width:50%">
+  <tr>
+    <th width=45%>Previous Pupper 1</th>
+    <th width=10%></th>
+	<th width=45%>Previous Pupper 2</th>
+  </tr>
+
+  <tr>
+    <td style="text-align:center;padding:20px" width=45%><strong><div id="prev1"><strong>Click the cuter pup above to get started</strong></div></strong></td>
+    <strong><td style="text-align:center" width=10%><strong><div id = "winner">vs.</div></strong></td></strong>
+    <td style="text-align:center;padding:20px" width=45%><strong><div id="prev2">Click the cuter pup above to get started</div></strong></td>
+  </tr>
+</table>
+
+<br>
+<h3 style="text-align:center">Winner Pups!</h3>
+
+<div class="centerbutton"><button onclick="clearTable()" class="centerbutton">Clear Table</button></div>
+<br><br>
+
+<div id="container" style="text-align:center" class="center"></div>
+<br>
+
+<footer>
+  <p><strong>&copy; Copyright 2020 by <a href="https://www.ScionLi.com" target="_blank">Scion Li</a></strong></p>
+</footer>
+
+<script>
+
+var pups2 = [[1,2,3,4],[1400,1400,1400,1400]]
+var pups = [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],[1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400,1400],["Aiden","Hudson","Sugar","Paige","Tripp","Winston","Millie","Duffy","Coco","Donnie","Parka","Zuri","Bean","Ira","Belle","Cricket","Ozzy","Zoe","Skye","Cinnamon","Boomer","Logan","Starla","Winston"]]
+
+//var pups = [["pup1","pup 2","pup 3"],[1400,1400,1400]]
+var winnerPups = []
+
+function checkpup(pupmatch) {
+  return pupmatch == document.getElementById("pup1").innerHTML;
+}
+
+function checkpup2(pupmatch2) {
+  return pupmatch2 == document.getElementById("pup2").innerHTML;
+}
+
+function clearTable() {
+  winnerPups = [];
+}
+
+function Pup1Win() {
+  var i1_prev = document.getElementById("newpup1").src;
+  i1_prev = parseInt(i1_prev.substring(i1_prev.length - 6,i1_prev.length - 4))-1;
+  var i2_prev = document.getElementById("newpup2").src;
+  i2_prev = parseInt(i2_prev.substring(i2_prev.length - 6,i2_prev.length - 4))-1;
+
+  
+  var x = document.getElementById("pup1");
+  var y = document.getElementById("pup2");
+  var a = document.getElementById("prev1");
+  var b = document.getElementById("prev2");
+  var c = document.getElementById("winner");
+
+  var pup1_prev = x.innerHTML;
+  var pup2_prev = y.innerHTML;
+  var elo1_prev = pups[1][i1_prev];
+  var elo2_prev = pups[1][i2_prev];
+
+  winnerPups.push(x.innerHTML)   
+  
+  a.innerHTML = pup1_prev + "<br />" + "<br />" + "Previous ELO = " + (elo1_prev*1).toFixed(0);
+  b.innerHTML = pup2_prev + "<br />" + "<br />" + "Previous ELO = " + (elo2_prev*1).toFixed(0);
+  c.innerHTML = "Winner" + "<br />" + " <-"
+
+  //Adjust ELO Score
+  var delta1 = 32 * (1 - (1/(1+10**((elo1_prev-elo2_prev)/400))));
+  var delta2 = 32 * (0 - (1/(1+10**((elo1_prev-elo2_prev)/400))));
+  
+  pups[1][i1_prev] = pups[1][i1_prev] + delta1; 
+  pups[1][i2_prev] = pups[1][i2_prev] + delta2; 
+
+  a.innerHTML = a.innerHTML + "<br />" + "<br />" + "New ELO: " + pups[1][i1_prev].toFixed(1)+ "<br />" + "<br />" + "Change: +" + delta1.toFixed(1);
+  b.innerHTML = b.innerHTML + "<br />" + "<br />" + "New ELO: " + pups[1][i2_prev].toFixed(1)+ "<br />" + "<br />" + "Change: " + delta2.toFixed(1);
+  
+  //Randomize for new matchup
+  var i1 = Math.floor(Math.random() * pups[0].length);
+  var i2 = Math.floor(Math.random() * pups[0].length);
+  
+  var pup1 = pups[0][i1];
+  var pup2 = pups[0][i2];
+  
+  if (pup1<10) {
+    imgsrc1 = "pups/puppy0"+pup1+".jpg";
+  } else {
+    imgsrc1 = "pups/puppy"+pup1+".jpg";
+  }
+  
+  if (pup2<10) {
+    imgsrc2 = "pups/puppy0"+pup2+".jpg";
+  } else {
+    imgsrc2 = "pups/puppy"+pup2+".jpg";
+  }
+  
+  
+  if (x.innerHTML === y.innerHTML) {
+    var i2 = Math.floor(Math.random() * pups[0].length)
+    var pup2 = pups[0][i2];
+  } else {
+    document.getElementById("newpup1").src=imgsrc1;
+	document.getElementById("newpup2").src=imgsrc2;
+  }
+  document.getElementById("newpup1").src=imgsrc1;
+  document.getElementById("newpup2").src=imgsrc2;
+}
+
+
+function Pup1Win2() {
+
+  var i1_prev = document.getElementById("newpup1").src;
+  i1_prev = parseInt(i1_prev.substring(i1_prev.length - 6,i1_prev.length - 4))-1;
+  var i2_prev = document.getElementById("newpup2").src;
+  i2_prev = parseInt(i2_prev.substring(i2_prev.length - 6,i2_prev.length - 4))-1;
+
+  
+  var x = document.getElementById("pup1");
+  var y = document.getElementById("pup2");
+  var a = document.getElementById("prev1");
+  var b = document.getElementById("prev2");
+  var c = document.getElementById("winner");
+
+  var pup1_prev = x.innerHTML;
+  var pup2_prev = y.innerHTML;
+  var elo1_prev = pups[1][i1_prev];
+  var elo2_prev = pups[1][i2_prev];
+
+  winnerPups.push(y.innerHTML)   
+  
+  a.innerHTML = pup1_prev + "<br />" + "<br />" + "Previous ELO = " + (elo1_prev*1).toFixed(0);
+  b.innerHTML = pup2_prev + "<br />" + "<br />" + "Previous ELO = " + (elo2_prev*1).toFixed(0);
+  c.innerHTML = "Winner" + "<br />" + "  ->"
+
+  //Adjust ELO Score
+  var delta1 = 32 * (0 - (1/(1+10**((elo1_prev-elo2_prev)/400))));
+  var delta2 = 32 * (1 - (1/(1+10**((elo1_prev-elo2_prev)/400))));
+  
+  pups[1][i1_prev] = pups[1][i1_prev] + delta1; 
+  pups[1][i2_prev] = pups[1][i2_prev] + delta2; 
+
+  a.innerHTML = a.innerHTML + "<br />" + "<br />" + "New ELO: " + pups[1][i1_prev].toFixed(1)+ "<br />" + "<br />" + "Change: " + delta1.toFixed(1);
+  b.innerHTML = b.innerHTML + "<br />" + "<br />" + "New ELO: " + pups[1][i2_prev].toFixed(1)+ "<br />" + "<br />" + "Change: +" + delta2.toFixed(1);
+  
+  //Randomize for new matchup
+  var i1 = Math.floor(Math.random() * pups[0].length);
+  var i2 = Math.floor(Math.random() * pups[0].length);
+
+  var pup1 = pups[0][i1];
+  var pup2 = pups[0][i2];
+  
+  
+  if (pup1<10) {
+    imgsrc1 = "pups/puppy0"+pup1+".jpg";
+  } else {
+  imgsrc1 = "pups/puppy"+pup1+".jpg";
+  }
+  
+  if (pup2<10) {
+    imgsrc2 = "pups/puppy0"+pup2+".jpg";
+  } else {
+  imgsrc2 = "pups/puppy"+pup2+".jpg";
+  }
+  
+  if (x.innerHTML === y.innerHTML) {
+    var i2 = Math.floor(Math.random() * pups[0].length)
+    var pup2 = pups[0][i2];
+  } else {
+    document.getElementById("newpup1").src=imgsrc1;
+	document.getElementById("newpup2").src=imgsrc2;
+  }
+  document.getElementById("newpup1").src=imgsrc1;
+  document.getElementById("newpup2").src=imgsrc2;
+}
+
+//document.getElementById("imageid").src="pups/puppy1.jpg";
+	
+
+function startup() {
+
+  var x = document.getElementById("pup1");
+  var y = document.getElementById("pup2");
+  var a = document.getElementById("prev1");
+  var b = document.getElementById("prev2");
+  var c = document.getElementById("winner");
+
+  
+  //Randomize for new matchup
+  var i1 = Math.floor(Math.random() * pups[0].length);
+  var i2 = Math.floor(Math.random() * pups[0].length);
+  
+  var pup1 = pups[0][i1];
+  var pup2 = pups[0][i2];
+  
+  if (pup1<10) {
+    imgsrc1 = "pups/puppy0"+pup1+".jpg";
+  } else {
+  imgsrc1 = "pups/puppy"+pup1+".jpg";
+  }
+  
+  if (pup2<10) {
+    imgsrc2 = "pups/puppy0"+pup2+".jpg";
+  } else {
+  imgsrc2 = "pups/puppy"+pup2+".jpg";
+  }
+  
+  if (x.innerHTML === y.innerHTML) {
+    var i2 = Math.floor(Math.random() * pups[0].length)
+    var pup2 = pups[0][i2];
+  } else {
+    document.getElementById("newpup1").src=imgsrc1;
+    document.getElementById("newpup2").src=imgsrc2;
+  }
+  document.getElementById("newpup1").src=imgsrc1;
+  document.getElementById("newpup2").src=imgsrc2;
+}
+
+//Winner's table at bottom
+window.addEventListener("click", function(){
+  // Dummy Array
+  var data = winnerPups;
+  // Draw HTML table
+  var perrow = 3, // 3 cells per row
+      html = "<table><tr>";
+
+  // Loop through array and add table cells
+  for (var i=0; i<data.length; i++) {
+    html += "<td>" + data[i] + "</td>";
+
+    // If you need to click on the cell and do something
+    // html += "<td onclick='FUNCTION()'>" + data[i] + "</td>";
+ 
+    // Break into next row
+    var next = i+1;
+    if (next%perrow==0 && next!=data.length) {
+      html += "</tr><tr>";
+    }
+  }
+  html += "</tr></table>";
+
+  // Attach HTML to container
+  document.getElementById("container").innerHTML = html;
+});
+
+
+window.onload = startup;
+</script>
+
+</body>
+</html>
